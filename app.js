@@ -26,18 +26,23 @@ const http = require("http").Server(app);
 const io = require("socket.io")(http);
 
 // connecting to socket
-io.on("connection", socket => {
-  socket.on("click", quest => {
+io.on('connection', (socket) => {
+  socket.on('join', (quest) => {
+    console.log("User joined quest " + quest);
+    socket.join(quest);
+  });
+
+  socket.on('click', (quest) => {
     console.log("Received click for quest " + quest);
     Quest.findOneAndUpdate(
-      { id: quest },
+      { id: quest }, 
       { $inc: { clicks: 1 } },
       (err, res) => {
-        if (err) {
+        if (err || !res) {
           console.log(err);
         } else {
           console.log("Incremented clicks to " + res.clicks);
-          io.emit("clickUpdate", res);
+          io.to(quest).emit('clickUpdate', res);
         }
       }
     );
