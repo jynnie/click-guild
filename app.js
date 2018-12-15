@@ -13,6 +13,14 @@ const PORT = process.env.PORT || 8080;
 const http = require("http").Server(app);
 const io = require("socket.io")(http);
 
+const mongoose = require("mongoose");
+mongoose.connect("mongodb+srv://admin:IwWCxkbimm3Tfw08@cluster-8vacn.mongodb.net/test?retryWrites=true", {dbName: "db", useNewUrlParser: true});
+const Quest = mongoose.model('Quest', { id: Number, clicks: Number });
+const test = new Quest({id: 0, clicks: 0});
+test.save(function (err, doc) {
+    console.log(doc);
+});
+
 // setting file paths
 app.set("views", path.join(__dirname, "views"));
 app.use("/static", express.static(path.join(__dirname, "public")));
