@@ -1,0 +1,14 @@
+extends layout
+
+block title
+  title Login | Click Guild
+
+block content
+  h1 Login
+  form(method="POST")
+    div
+      input(type="text" name="username" placeholder="username")
+    div
+      input(type="password" name="password" placeholder="password")
+    div
+      input(type="submit" value="Login")
