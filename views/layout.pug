@@ -11,9 +11,13 @@ html
   body
     //- navbar
     ul
-      li
-        a(href="signup") sign up
-      li
-        a(href="login") login
+      if user
+        li
+          a(href="logout") logout
+      else
+        li
+          a(href="signup") sign up
+        li
+          a(href="login") login
     
     block content
