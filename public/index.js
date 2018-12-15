@@ -16,7 +16,7 @@ $(() => {
   });
 
   $("#find-quest").click(() => {
-    socket.emit("find quest");
+    socket.emit("find quest", quest);
   });
 
   socket.on("clickUpdate", upd => {

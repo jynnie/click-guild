@@ -31,8 +31,8 @@ io.on("connection", socket => {
     console.log("User left quest " + quest.leave);
     console.log("User joined quest " + quest);
     socket.leave(quest.leave);
-    socket.join(quest);
-    Quest.findOne({ _id: quest }, (err, aq) => {
+    socket.join(quest.join);
+    Quest.findOne({ _id: quest.join }, (err, aq) => {
       if (err) {
         console.log(err);
       } else if (aq) {
@@ -57,7 +57,9 @@ io.on("connection", socket => {
     );
   });
 
-  socket.on("find quest", () => {
+  socket.on("find quest", leave => {
+    socket.leave(leave);
+
     Quest.makeNew(nq => {
       socket.emit("active quest", nq);
       socket.join(nq._id);
