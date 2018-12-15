@@ -21,6 +21,7 @@ $(() => {
 
   socket.on("clickUpdate", upd => {
     $("#count").text(upd.clicks);
+    $("#progress").val(upd.clicks);
   });
 
   socket.on("active quest", nq => {
@@ -30,6 +31,8 @@ $(() => {
     $("#quest-code").text(`
       Tell your friends to join this quest with the code ${nq._id}`);
     $("#count").text(nq.clicks);
+    $("#progress").val(nq.clicks);
+    $("#progress").attr({ max: nq.target });
     quest = nq._id;
   });
 });

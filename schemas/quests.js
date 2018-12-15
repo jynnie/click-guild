@@ -57,7 +57,8 @@ questSchema.statics.makeNew = callback => {
     "sea",
     "your",
     "misty",
-    "law-abiding"
+    "law-abiding",
+    "cheerful"
   ];
   let noun = [
     "surprise",
@@ -89,7 +90,9 @@ questSchema.statics.makeNew = callback => {
     "prince",
     "queen",
     "citizen",
-    "baby"
+    "baby",
+    "yokai",
+    "weeb"
   ];
 
   let questObj;
@@ -97,7 +100,7 @@ questSchema.statics.makeNew = callback => {
     descript: `${verbs[Math.floor(Math.random() * verbs.length)]} ${
       adjs[Math.floor(Math.random() * adjs.length)]
     } ${noun[Math.floor(Math.random() * noun.length)]}`,
-    target: Math.floor(Math.random() * Math.floor(10000000)),
+    target: Math.floor(Math.random() * Math.floor(3000)),
     clicks: 0,
     clickers: 1,
     status: false
