@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 8080;
 // mongoose setup
 mongoose.set("useFindAndModify", false);
 mongoose.connect(
-  "mongodb+srv://admin:IwWCxkbimm3Tfw08@cluster-8vacn.mongodb.net/test?retryWrites=true",
+  config.MONGO_URI,
   { dbName: "db", useNewUrlParser: true }
 );
 
