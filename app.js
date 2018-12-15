@@ -3,23 +3,35 @@ const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
 const pug = require("pug"); // view engine
+const mongoose = require("mongoose");
 
 const routes = require("./routes/index");
 
 const app = express();
 const PORT = process.env.PORT || 8080;
 
+mongoose.set('useFindAndModify', false);
+mongoose.connect("mongodb+srv://admin:IwWCxkbimm3Tfw08@cluster-8vacn.mongodb.net/test?retryWrites=true", {dbName: "db", useNewUrlParser: true});
+const Quest = mongoose.model('Quest', { id: Number, clicks: Number });
+
 // initialize socket
 const http = require("http").Server(app);
 const io = require("socket.io")(http);
-
-const mongoose = require("mongoose");
-mongoose.connect("mongodb+srv://admin:IwWCxkbimm3Tfw08@cluster-8vacn.mongodb.net/test?retryWrites=true", {dbName: "db", useNewUrlParser: true});
-const Quest = mongoose.model('Quest', { id: Number, clicks: Number });
-const test = new Quest({id: 0, clicks: 0});
-test.save(function (err, doc) {
-    console.log(doc);
+io.on('connection', (socket) => {
+  socket.on('click', (quest) => {
+    console.log("Received click for quest " + quest);
+    Quest.findOneAndUpdate({id: quest}, {$inc: {clicks: 1}}, (err, res) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("Incremented clicks to " + res.clicks);
+        io.emit('clickUpdate', res);
+      }
+    });
+  });
+  console.log("user connected to socket"); 
 });
+
 
 // setting file paths
 app.set("views", path.join(__dirname, "views"));
