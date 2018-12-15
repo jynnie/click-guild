@@ -28,8 +28,10 @@ const io = require("socket.io")(http);
 // connecting to socket
 io.on('connection', (socket) => {
   socket.on('join', (quest) => {
-    console.log("User joined quest " + quest);
-    socket.join(quest);
+    console.log("User left quest " + quest.leave);
+    console.log("User joined quest " + quest.join);
+    socket.leave(quest.leave);
+    socket.join(quest.join);
   });
 
   socket.on('click', (quest) => {
@@ -47,7 +49,6 @@ io.on('connection', (socket) => {
       }
     );
   });
-
   console.log("user connected to socket");
 });
 

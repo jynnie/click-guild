@@ -7,8 +7,12 @@ $(() => {
   });
 
   $("#quest-choose").click(() => {
-     quest = $("#quest").val();
-     socket.emit("join", quest);
+     const newQuest = $("#quest").val();
+     socket.emit("join", { 
+       leave: quest,
+       join: newQuest 
+     });
+     quest = newQuest;
   });
 
   socket.on("clickUpdate", (upd) => {
