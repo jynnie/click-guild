@@ -25,11 +25,16 @@ const Quest = require("./schemas/quest");
 const http = require("http").Server(app);
 const io = require("socket.io")(http);
 
+// partial generators
+const questPartial = quest => {
+  return pug.renderFile("views/partials/quest-socket.pug", { q: quest });
+};
+
 // connecting to socket
 io.on("connection", socket => {
   socket.on("join", quest => {
     console.log("User left quest " + quest.leave);
-    console.log("User joined quest " + quest);
+    console.log("User joined quest " + quest.join);
     socket.leave(quest.leave);
     socket.join(quest.join);
     Quest.findOne({ _id: quest.join }, (err, aq) => {
@@ -64,6 +69,9 @@ io.on("connection", socket => {
     Quest.makeNew(nq => {
       socket.emit("active quest", nq);
       socket.join(nq._id);
+
+      let listing = questPartial(nq);
+      io.emit("new quest", listing);
     });
   });
 

@@ -2,9 +2,9 @@ let quest = -1;
 const socket = io();
 
 const loadQuests = function() {
-  $.getJSON("/quests", (res) => {
+  $.getJSON("/quests", res => {
     $("#quests").text("");
-    res.forEach((quest) => {
+    res.forEach(quest => {
       $("#quests").append($("<div>" + quest._id + "</div>"));
     });
   });
@@ -37,6 +37,10 @@ $(() => {
   socket.on("clickUpdate", upd => {
     $("#count").text(upd.clicks);
     $("#progress").val(upd.clicks);
+  });
+
+  socket.on("new quest", nq => {
+    $("#quests").append($(nq));
   });
 
   socket.on("active quest", nq => {
