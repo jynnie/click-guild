@@ -1,4 +1,5 @@
 let quest = -1;
+const socket = io();
 
 const loadQuests = function() {
   $.getJSON("/quests", (res) => {
@@ -9,8 +10,15 @@ const loadQuests = function() {
   });
 };
 
+const joinQuest = function(newQuest) {
+  socket.emit("join", {
+    leave: quest,
+    join: newQuest
+  });
+  quest = newQuest;
+};
+
 $(() => {
-  const socket = io();
   //loadQuests();
 
   $("#clicker").click(() => {
@@ -19,11 +27,7 @@ $(() => {
 
   $("#quest-choose").click(() => {
     const newQuest = $("#quest").val();
-    socket.emit("join", {
-      leave: quest,
-      join: newQuest
-    });
-    quest = newQuest;
+    joinQuest(newQuest);
   });
 
   $("#find-quest").click(() => {

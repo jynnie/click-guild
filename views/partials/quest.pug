@@ -1,2 +1,3 @@
 mixin quest(q)
-  p Click #{q.clicks} times to #{q.descript} (#{q._id})
+  p Click #{q.target} times to #{q.descript} 
+    button(onClick='joinQuest("'+ q._id + '")') Join

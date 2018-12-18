@@ -50,6 +50,7 @@ io.on("connection", socket => {
         if (err || !res) {
           console.log(err);
         } else {
+          res.clicks++;
           console.log("Incremented clicks to " + res.clicks);
           io.to(quest).emit("clickUpdate", res);
         }
