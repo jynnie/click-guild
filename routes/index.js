@@ -21,7 +21,9 @@ router.get("/", function(req, res, next) {
       }
     });
   } else {
-    res.render("index", { content: "hey boss" });
+    Quest.find({ lastActivity: { $gte: new Date() - 1000*60 } }).exec((err, quests) => {
+      res.render("index", { quests: quests });
+    });
   }
 });
 

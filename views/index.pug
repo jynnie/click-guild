@@ -4,14 +4,17 @@ block title
   title Home | Click Guild
 
 block content
+  include partials/quest.pug
   h1 Welcome to Click Guild!
   div
     button#find-quest Find
     | a Quest
 
   div#quests
-    
-  div 
+    each quest in quests
+      +quest(quest)
+
+  div
     | Join Quest:
     input#quest
     button#quest-choose Join

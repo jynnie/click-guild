@@ -11,7 +11,7 @@ const loadQuests = function() {
 
 $(() => {
   const socket = io();
-  loadQuests();
+  //loadQuests();
 
   $("#clicker").click(() => {
     socket.emit("click", quest);
@@ -36,7 +36,7 @@ $(() => {
   });
 
   socket.on("active quest", nq => {
-    loadQuests();
+    //loadQuests();
     $("#quest-info").text(
       `Current quest: click ${nq.target} times to ${nq.descript}`
     );
