@@ -19,7 +19,7 @@ mongoose.connect(
   { dbName: "db", useNewUrlParser: true }
 );
 
-const Quest = require("./schemas/quests");
+const Quest = require("./schemas/quest");
 
 // initialize socket
 const http = require("http").Server(app);
@@ -45,7 +45,7 @@ io.on("connection", socket => {
     console.log("Received click for quest " + quest);
     Quest.findOneAndUpdate(
       { _id: quest },
-      { $inc: { clicks: 1 } },
+      { $inc: { clicks: 1 }, $set: { lastActivity: new Date() } },
       (err, res) => {
         if (err || !res) {
           console.log(err);

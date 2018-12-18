@@ -6,7 +6,8 @@ const questSchema = new mongoose.Schema({
   target: Number,
   clicks: Number,
   clickers: Number,
-  status: Boolean
+  lastActivity: Date,
+  completed: Boolean
 });
 
 // find a random quest
@@ -103,7 +104,8 @@ questSchema.statics.makeNew = callback => {
     target: Math.floor(Math.random() * Math.floor(3000)),
     clicks: 0,
     clickers: 1,
-    status: false
+    lastActivity: new Date(),
+    completed: false
   };
   Quest.create(newQuest, (error, quest) => {
     if (error) {

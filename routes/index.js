@@ -6,6 +6,7 @@ const router = express.Router();
 
 // schemas
 const User = require("../schemas/user");
+const Quest = require("../schemas/quest");
 
 router.get("/", function(req, res, next) {
   // check if user logged in
@@ -22,6 +23,12 @@ router.get("/", function(req, res, next) {
   } else {
     res.render("index", { content: "hey boss" });
   }
+});
+
+router.get("/quests", (req, res, next) => {
+  Quest.find({ lastActivity: { $gte: new Date() - 1000*60 } }).exec((err, quests) => {
+    res.json(quests);
+  });
 });
 
 router.get("/signup", (req, res, next) => {

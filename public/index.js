@@ -1,7 +1,18 @@
 let quest = -1;
 
+const loadQuests = function() {
+  $.getJSON("/quests", (res) => {
+    $("#quests").text("");
+    res.forEach((quest) => {
+      $("#quests").append($("<div>" + quest._id + "</div>"));
+    });
+  });
+};
+
 $(() => {
   const socket = io();
+  loadQuests();
+
   $("#clicker").click(() => {
     socket.emit("click", quest);
   });
@@ -25,6 +36,7 @@ $(() => {
   });
 
   socket.on("active quest", nq => {
+    loadQuests();
     $("#quest-info").text(
       `Current quest: click ${nq.target} times to ${nq.descript}`
     );
