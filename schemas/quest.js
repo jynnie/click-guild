@@ -103,7 +103,7 @@ questSchema.statics.makeNew = callback => {
     } ${noun[Math.floor(Math.random() * noun.length)]}`,
     target: Math.floor(Math.random() * Math.floor(3000)),
     clicks: 0,
-    clickers: 1,
+    clickers: 0,
     lastActivity: new Date(),
     completed: false
   };

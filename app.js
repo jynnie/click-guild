@@ -30,13 +30,77 @@ const questPartial = quest => {
   return pug.renderFile("views/partials/quest-socket.pug", { q: quest });
 };
 
+// HELPER FUNCTIONS
+// user leaves quest and updates # of actives
+const leaveQuest = socket => {
+  if (socket.quest !== null) {
+    socket.leave(socket.quest);
+    console.log("User left quest " + socket.quest);
+
+    Quest.findOneAndUpdate(
+      { _id: socket.quest },
+      { $inc: { clickers: -1 }, $set: { lastActivity: new Date() } },
+      (err, quest) => {
+        if (err || !quest) {
+          console.log(err);
+        } else {
+          console.log(
+            `Leaving: ${quest.clickers - 1} active for quest ${quest._id}`
+          );
+
+          io.to(quest._id).emit("active quest", quest);
+        }
+      }
+    );
+  }
+  socket.quest = null;
+};
+
+/**
+ * user joins quest and updates # of actives
+ * @param {socket} socket
+ * @param {string} id of quest to join
+ **/
+const joinQuest = (socket, id) => {
+  leaveQuest(socket);
+  socket.quest = id;
+
+  socket.join(id);
+
+  // ++ number of actives
+  Quest.findOneAndUpdate(
+    { _id: id },
+    { $inc: { clickers: 1 }, $set: { lastActivity: new Date() } },
+    (err, quest) => {
+      if (err || !quest) {
+        console.log(err);
+      } else {
+        quest.clickers++;
+        console.log(`Joining: ${quest.clickers} active for quest ${quest._id}`);
+
+        // send listing for this quest if you are the first active
+        let listing = questPartial(quest);
+        io.emit("new quest", quest._id, listing);
+
+        io.to(quest._id).emit("active quest", quest);
+      }
+    }
+  );
+
+  console.log("User joined quest " + id);
+};
+
 // connecting to socket
 io.on("connection", socket => {
+  socket.quest = null; // keeps track of your current room
+  console.log("Welcome new guest user!");
+
   socket.on("join", quest => {
-    console.log("User left quest " + quest.leave);
-    console.log("User joined quest " + quest.join);
-    socket.leave(quest.leave);
-    socket.join(quest.join);
+    if (quest.leave != null && quest.leave != -1) {
+      socket.quest = quest.leave;
+    }
+
+    joinQuest(socket, quest.join);
     Quest.findOne({ _id: quest.join }, (err, aq) => {
       if (err) {
         console.log(err);
@@ -64,18 +128,20 @@ io.on("connection", socket => {
   });
 
   socket.on("find quest", leave => {
-    socket.leave(leave);
+    if (leave != null && leave != -1) {
+      socket.quest = leave;
+    }
 
     Quest.makeNew(nq => {
+      joinQuest(socket, nq._id);
       socket.emit("active quest", nq);
-      socket.join(nq._id);
-
-      let listing = questPartial(nq);
-      io.emit("new quest", listing);
     });
   });
 
-  console.log("user connected to socket");
+  socket.on("disconnect", () => {
+    leaveQuest(socket);
+    console.log("Guest user disconnected");
+  });
 });
 
 // setting file paths

@@ -18,6 +18,13 @@ const joinQuest = function(newQuest) {
   quest = newQuest;
 };
 
+const updateListings = (id, partial) => {
+  console.log($(`#${id}`).length);
+  if ($(`#${id}`).length == 0) {
+    $("#quests").append($(partial));
+  }
+};
+
 $(() => {
   //loadQuests();
 
@@ -39,8 +46,8 @@ $(() => {
     $("#progress").val(upd.clicks);
   });
 
-  socket.on("new quest", nq => {
-    $("#quests").append($(nq));
+  socket.on("new quest", (id, partial) => {
+    updateListings(id, partial);
   });
 
   socket.on("active quest", nq => {
@@ -48,8 +55,10 @@ $(() => {
     $("#quest-info").text(
       `Current quest: click ${nq.target} times to ${nq.descript}`
     );
-    $("#quest-code").text(`
-      Tell your friends to join this quest with the code ${nq._id}`);
+    $("#quest-actives").text(`${nq.clickers} players are on this quest`);
+    $("#quest-code").text(
+      `Tell your friends to join this quest with the code ${nq._id}`
+    );
     $("#count").text(nq.clicks);
     $("#progress").val(nq.clicks);
     $("#progress").attr({ max: nq.target });

@@ -5,6 +5,7 @@
 - random quest generator
 - active quest listings populated on load
 - how many people per quest rn (where people are sockets connected for now)
+- client ping server for refresh of listings
 
 pushing users for later
 
