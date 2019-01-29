@@ -11,11 +11,13 @@ const routes = require("./routes/index");
 
 const app = express();
 const PORT = process.env.PORT || 8080;
+const MONGO_URI = process.env.MONGO_URI || config.MONGO_URI;
+const SECRET = process.env.SECRET || config.SECRET;
 
 // mongoose setup
 mongoose.set("useFindAndModify", false);
 mongoose.connect(
-  config.MONGO_URI,
+  MONGO_URI,
   { dbName: "db", useNewUrlParser: true }
 );
 
@@ -86,6 +88,7 @@ const joinQuest = (socket, id) => {
       }
     }
   );
+
 
   console.log("User joined quest " + id);
 };
@@ -158,7 +161,7 @@ app.use(bodyParser.json());
 // create sessions
 app.use(
   session({
-    secret: config.SECRET,
+    secret: SECRET,
     resave: false,
     saveUninitialized: true
   })
