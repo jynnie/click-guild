@@ -1,19 +1,10 @@
 # click-guild
 
-## MVP todo
+a quick sketch of a massive multiplayer online clicking game. players can collaboratively click together to complete randomly generated quests.
 
-- random quest generator
-- active quest listings populated on load
-- how many people per quest rn (where people are sockets connected for now)
-- client ping server for refresh of listings
+## future vision
 
-pushing users for later
-
-## future stuff
-
-- login stuff
-- character stuff
-- guilds
-
-- quests
-- dungeons
+- user accounts with associated character
+- guild organizations
+- dungeons and ongoing quests
+- prettier styling
